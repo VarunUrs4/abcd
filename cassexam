@@ -1,0 +1,37 @@
+
+cqlsh> create keyspace Business with replication = { 'class':'SimpleStrategy', 'replication_factor':3 };
+
+
+cqlsh:business> create table Bank(
+            ... customer_id int,
+            ... customer_name text,
+            ... account_bal double,
+            ... account_type text,
+            ... primary key(customer_id));
+cqlsh:business> begin batch
+            ... insert into Bank(customer_id,customer_name,account_bal,account_type) values (1001,'a',10000,'savings')
+            ... insert into Bank(customer_id,customer_name,account_bal,account_type) values (1002,'b',50000,'savings')
+            ... insert into Bank(customer_id,customer_name,account_bal,account_type) values (1002,'c',505500,'current')
+            ... insert into Bank(customer_id,customer_name,account_bal,account_type) values (1002,'d',11500,'current')
+            ... insert into Bank(customer_id,customer_name,account_bal,account_type) values (1002,'e',105000,'savings')
+            ... apply batch;
+
+cqlsh:business> select * from bank;
+
+
+cqlsh:business> select customer_name,account_bal from bank where account_bal>80000 allow filtering ;
+ filtering ;
+
+cqlsh:business> update bank set branch_name='Bengaluru' where customer_id = 1001;
+cqlsh:business> select * from bank;
+
+cqlsh:business> copy bank(customer_id,account_bal,account_type,branch_name,customer_name) to '/home/bmscecse/Desktop/varunurs182/data.csv' with header='true';
+
+
+cqlsh:business> truncate table bank;
+cqlsh:business> select * from bank;
+
+cqlsh:business> copy bank(customer_id,account_bal,account_type,branch_name,customer_name) from '/home/bmscecse/Desktop/varunurs182/data.csv' with header='true';
+
+cqlsh:business> select * from bank;
+
